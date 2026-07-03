@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.tret9"
-version = "1.5.0-js-0.1"
+version = "1.6.0-alpha01-js-0.1"
 
 val quickjsSourceDir = file("native-test/quickjs")
 
@@ -44,7 +44,14 @@ tasks.register<Exec>("jsQjsTest") {
 
 
 kotlin {
-    applyDefaultHierarchyTemplate()
+    applyDefaultHierarchyTemplate {
+        common {
+            group("nonJs") {
+                withJvm()
+                withNative()
+            }
+        }
+    }
 
     jvm()
     js {
@@ -62,14 +69,11 @@ kotlin {
     iosSimulatorArm64()
     iosX64()
     macosArm64()
-    macosX64()
     tvosArm64()
     tvosSimulatorArm64()
-    tvosX64()
     watchosArm32()
     watchosArm64()
     watchosSimulatorArm64()
-    watchosX64()
     linuxArm64()
     linuxX64()
     mingwX64()
@@ -89,6 +93,7 @@ kotlin {
         val macosMain by getting
         val tvosMain by getting
         val watchosMain by getting
+        val nonJsMain by getting
 
         commonMain.dependencies {
             api(kotlin("stdlib"))
@@ -126,18 +131,6 @@ kotlin {
             }
         }
 
-        // Per 1.5.0 build: explicit native target → source set wiring
-        targets.withType<KotlinNativeTarget>().configureEach {
-            compilations.getByName("main").defaultSourceSet {
-                val konanTargetFamily = konanTarget.family
-                when (konanTargetFamily) {
-                    Family.OSX, Family.IOS, Family.WATCHOS, Family.TVOS -> dependsOn(appleMain)
-                    Family.LINUX -> dependsOn(linuxMain)
-                    Family.MINGW -> dependsOn(mingwMain)
-                    else -> {}
-                }
-            }
-        }
     }
 }
 
