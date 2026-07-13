@@ -1,13 +1,10 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.konan.target.Family
-
 plugins {
     kotlin("multiplatform") version "2.3.21"
     id("com.vanniktech.maven.publish") version "0.37.0"
 }
 
 group = "io.github.tret9"
-version = "1.6.0-alpha01-js-0.1"
+version = "1.6.0-alpha01-js-0.2"
 
 val quickjsSourceDir = file("native-test/quickjs")
 
@@ -190,19 +187,6 @@ mavenPublishing {
             url.set("https://github.com/tret9/androidx-collection-js")
             connection.set("scm:git:git://github.com/tret9/androidx-collection-js.git")
             developerConnection.set("scm:git:ssh://git@github.com/tret9/androidx-collection-js.git")
-        }
-    }
-}
-
-
-publishing {
-    publications {
-        withType<MavenPublication>().configureEach {
-            artifactId = when (name) {
-                "jvm" -> "collection-jvm"
-                "js" -> "collection-js"
-                else -> artifactId
-            }
         }
     }
 }
